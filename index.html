@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@500&display=swap" rel="stylesheet">
+    <title>Etch A Sketch</title>
+</head>
+
+<body>
+    <div class="main-container">
+
+        <div class="bar">
+            <div class="draw-options">
+                <div>
+                    <h4>Draw With:</h4>
+                </div>
+
+                <div class="hover-arrows-btns">
+                    <button class="btn " id="hover" onfocus="this.blur();"> Hover</button>
+                    <button class="btn " id="arrows" onfocus="this.blur();">Arrows</button>
+                </div>
+            </div>
+
+
+            <div class="effects-section">
+                <div class="colors-box">
+                    <button class="btn" id="warm"><img src="../images/flame.svg" alt="flame image"></button>
+                    <button class="btn" id="cold"><img src="../images/crystsl-ice.svg" alt="crystal ice image" width="35px"></button>
+                    <button class="btn" id="rainbow"><img src="../images/rainbow.svg" alt="rainboe image"></button>
+                    <button class="btn" id="gray"><img src="../images/gray-effect.svg" alt="gradaint color from whait to balck"></button>
+                    <button class="btn custom" id="custom"><input class="color-picker" type="color"></button>
+                    <button class="btn" id="clear"> Clear</button>
+                </div>
+            </div>
+
+
+            <div class="options-section">
+                <div class="slider-value-box">
+                    <h3>Pixel Size:</h3>
+                </div>
+
+                <div class="field">
+
+                    <div class="slider-container">
+                        <input class="slider" type="range" min="5" max="100" value="5" step="5" onkeydown="return false;">
+
+                    </div>
+                    <h4 class="size-value">5 x 5</h4>
+
+
+                </div>
+            </div>
+        </div>
+
+        <div class="canvas" id="canvas">
+        </div>
+
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
