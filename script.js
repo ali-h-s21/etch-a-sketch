@@ -160,15 +160,20 @@ function arrowsBtnEventHandler() {
 function delegatedDrawWithArrows(e) {
   if (e.target.classList.contains("pixel")) {
     fillPixelOnFocus(e);
+
+    let numberOfcolumns = parseInt(
+      canvas.style.gridTemplateColumns.match(/\d+/)[0],
+    );
+
+    window.buttomPixel =
+      parseInt(e.target.getAttribute("tabindex")) + numberOfcolumns;
+    window.topPixel =
+      parseInt(e.target.getAttribute("tabindex")) - numberOfcolumns;
   }
 }
 
 function fillPixelOnFocus(e) {
   setColor(e.target);
-  //the grid aka the canvas has the same number of colums and rows
-  let columns = getComputedStyle(canvas).gridTemplateColumns.split(" ").length;
-  window.buttomPixel = parseInt(e.target.getAttribute("tabindex")) + columns;
-  window.topPixel = parseInt(e.target.getAttribute("tabindex")) - columns;
 }
 
 // focus on the correct pixel when arrows pressed
