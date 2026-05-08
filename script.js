@@ -1,13 +1,22 @@
+let canvas;
+let color = "custom";
+let isMouseDrawing = false;
+let drawingMode = "none"; // mouse || arrows || none
+let topPixel = null;
+let buttomPixel = null;
 document.addEventListener("DOMContentLoaded", function () {
-  window.color = "custom";
-  window.isArrowsActive = false;
   createGrid();
   const drawingWithArrowsBtn = document.getElementById("arrows");
   const drawingWithMouseBtn = document.getElementById("hover");
-  const canvas = document.getElementById("canvas");
+  canvas = document.getElementById("canvas");
 
   drawingWithArrowsBtn.addEventListener("click", arrowsBtnEventHandler);
   drawingWithMouseBtn.addEventListener("click", mouseBtnEventHandler);
+
+  canvas.addEventListener("pointerdown", pointerDownHandler);
+  canvas.addEventListener("pointermove", delegatedDrawOnHover);
+  // this is in case the user releases the mouse click outside the canvas
+  window.addEventListener("pointerup", pointerUpHandler);
 
   // resizing the grid event handler
   $(".slider").on("input", function () {
@@ -132,31 +141,37 @@ function clear() {
 }
 
 function delegatedDrawOnHover(e) {
-  if (e.target.classList.contains("pixel")) {
+  if (e.target.classList.contains("pixel") && isMouseDrawing) {
     drawOnHover(e);
   }
 }
 
 function mouseBtnEventHandler() {
-  canvas.addEventListener("mouseover", delegatedDrawOnHover);
-  if (isArrowsActive === true) {
-    document.removeEventListener("keydown", handleArrowPress);
-    isArrowsActive = false;
-  }
+  drawingMode = "mouse";
+  isMouseDrawing = false;
+  //disable drawing with arrows
+  document.removeEventListener("keydown", handleArrowPress);
+  canvas.removeEventListener("focusin", delegatedDrawWithArrows);
 }
 
 function arrowsBtnEventHandler() {
-  // disable mouse drawing
-  canvas.removeEventListener("mouseover", delegatedDrawOnHover);
-  if (isArrowsActive === false) {
-    // listen to key press on document
-    document.addEventListener("keydown", handleArrowPress);
-    // listen to focus on the canvas
-    canvas.addEventListener("focusin", delegatedDrawWithArrows);
-    isArrowsActive = true;
-  }
+  drawingMode = "arrows";
+
+  // listen to key press on document
+  document.addEventListener("keydown", handleArrowPress);
+  // listen to focus on the canvas
+  canvas.addEventListener("focusin", delegatedDrawWithArrows);
 }
 
+function pointerDownHandler(e) {
+  if (drawingMode !== "mouse") return;
+  if (e.button !== 0) return;
+  e.preventDefault();
+  isMouseDrawing = true;
+}
+function pointerUpHandler(e) {
+  isMouseDrawing = false;
+}
 function delegatedDrawWithArrows(e) {
   if (e.target.classList.contains("pixel")) {
     fillPixelOnFocus(e);
@@ -166,8 +181,8 @@ function delegatedDrawWithArrows(e) {
       canvas.style.gridTemplateColumns.match(/\d+/)[0],
     );
 
-    window.buttomPixel = parseInt(e.target.tabIndex) + numberOfcolumns;
-    window.topPixel = parseInt(e.target.tabIndex) - numberOfcolumns;
+    buttomPixel = parseInt(e.target.tabIndex) + numberOfcolumns;
+    topPixel = parseInt(e.target.tabIndex) - numberOfcolumns;
   }
 }
 
@@ -186,14 +201,12 @@ function handleArrowPress(e) {
     }
 
     if (e.key === "ArrowUp") {
-      const upperPixel = document.querySelector(
-        `div[tabindex="${window.topPixel}"]`,
-      );
+      const upperPixel = document.querySelector(`div[tabindex="${topPixel}"]`);
 
       upperPixel && upperPixel.focus();
     } else if (e.key === "ArrowDown") {
       const lowerPixel = document.querySelector(
-        `div[tabindex="${window.buttomPixel}"]`,
+        `div[tabindex="${buttomPixel}"]`,
       );
 
       lowerPixel && lowerPixel.focus();
