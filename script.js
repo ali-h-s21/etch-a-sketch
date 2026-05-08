@@ -3,24 +3,12 @@ document.addEventListener("DOMContentLoaded", function () {
   window.isArrowsActive = false;
   createGrid();
   const drawingWithArrowsBtn = document.getElementById("arrows");
+  const drawingWithMouseBtn = document.getElementById("hover");
   const canvas = document.getElementById("canvas");
 
-  drawingWithArrowsBtn.addEventListener("click", () => {
-    canvas.removeEventListener("mouseover", delegatedDrawOnHover);
-    activeArrows();
-  });
+  drawingWithArrowsBtn.addEventListener("click", arrowsBtnEventHandler);
 
-  // drawing with the mouse
-  $("#hover").on("click", () => {
-    // stop arrows drawing
-    $("#arrows").off("click", activeArrows);
-    if (isArrowsActive === true) {
-      $(document).off("keydown");
-      isArrowsActive = false;
-    }
-
-    canvas.addEventListener("mouseover", delegatedDrawOnHover);
-  });
+  drawingWithMouseBtn.addEventListener("click", mouseBtnEventHandler);
 
   // resizing the grid event handler
   $(".slider").on("input", function () {
@@ -69,11 +57,11 @@ function moveWhithArrows() {
 }
 
 // ============
-function drawOnFocus() {
+function drawOnFocus(e) {
   let columns = $("#canvas").css("grid-Template-Columns").split(" ").length;
-  window.thisPixel = $(this);
-  window.buttomPixel = parseInt($(this).attr("tabindex")) + columns;
-  window.topPixel = parseInt($(this).attr("tabindex")) - columns;
+  window.thisPixel = e.target;
+  window.buttomPixel = parseInt(e.target.getAttribute("tabindex")) + columns;
+  window.topPixel = parseInt(e.target.getAttribute("tabindex")) - columns;
   setColor(thisPixel);
 }
 
@@ -82,7 +70,7 @@ function drawOnHover(e) {
 }
 
 function activeArrows() {
-  $("#canvas").on("focus", "div", drawOnFocus);
+  canvas.addEventListener("focusin", delegatedDrawWithArrows);
   if (isArrowsActive === false) {
     moveWhithArrows();
     isArrowsActive = true;
@@ -185,5 +173,23 @@ function clear() {
 function delegatedDrawOnHover(e) {
   if (e.target.classList.contains("pixel")) {
     drawOnHover(e);
+  }
+}
+
+function delegatedDrawWithArrows(e) {
+  console.log("focus triggred");
+  if (e.target.classList.contains("pixel")) {
+    drawOnFocus(e);
+  }
+}
+function arrowsBtnEventHandler() {
+  canvas.removeEventListener("mouseover", delegatedDrawOnHover);
+  activeArrows();
+}
+function mouseBtnEventHandler() {
+  canvas.addEventListener("mouseover", delegatedDrawOnHover);
+  if (isArrowsActive === true) {
+    $(document).off("keydown");
+    isArrowsActive = false;
   }
 }
