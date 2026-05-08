@@ -1,11 +1,12 @@
-$(document).ready(function () {
+document.addEventListener("DOMContentLoaded", function () {
   window.color = "custom";
   window.isArrowsActive = false;
   createGrid();
+  const drawingWithArrowsBtn = document.getElementById("arrows");
+  const canvas = document.getElementById("canvas");
 
-  $("#arrows").on("click", () => {
-    $("#canvas").off("mouseover", "div", drawOnHover);
-
+  drawingWithArrowsBtn.addEventListener("click", () => {
+    canvas.removeEventListener("mouseover", delegatedDrawOnHover);
     activeArrows();
   });
 
@@ -18,7 +19,7 @@ $(document).ready(function () {
       isArrowsActive = false;
     }
 
-    $("#canvas").on("mouseover", "div", drawOnHover);
+    canvas.addEventListener("mouseover", delegatedDrawOnHover);
   });
 
   // resizing the grid event handler
@@ -76,9 +77,8 @@ function drawOnFocus() {
   setColor(thisPixel);
 }
 
-function drawOnHover() {
-  let hoverPixel = $(this);
-  setColor(hoverPixel);
+function drawOnHover(e) {
+  setColor(e.target);
 }
 
 function activeArrows() {
@@ -136,7 +136,7 @@ function setColor(currentPixel) {
 // input color
 function inputColor(currentPixel) {
   let colorPickerVlaue = $(".color-picker").val();
-  currentPixel.css("background", colorPickerVlaue);
+  currentPixel.style.backgroundColor = colorPickerVlaue;
 }
 
 // warm colors
@@ -180,4 +180,10 @@ function grayScale(currentPixel) {
 // clear
 function clear() {
   $("#canvas div").css("background-color", "rgba(0,0,0,0)");
+}
+
+function delegatedDrawOnHover(e) {
+  if (e.target.classList.contains("pixel")) {
+    drawOnHover(e);
+  }
 }
