@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const canvas = document.getElementById("canvas");
 
   drawingWithArrowsBtn.addEventListener("click", arrowsBtnEventHandler);
-
   drawingWithMouseBtn.addEventListener("click", mouseBtnEventHandler);
 
   // resizing the grid event handler
@@ -32,49 +31,11 @@ document.addEventListener("DOMContentLoaded", function () {
 // ======= functions ========
 
 // move the line with arrows
-function moveWhithArrows() {
-  $(document).keydown(function (e) {
-    if (e.keyCode == 39) {
-      $(".pixel:focus").next().focus();
-    }
-    if (e.keyCode == 37) {
-      $(".pixel:focus").prev().focus();
-    }
-
-    try {
-      if (e.keyCode == 40) {
-        $(`div[tabindex="${buttomPixel}"]`).focus();
-      }
-      if (e.keyCode == 38) {
-        $(`div[tabindex="${topPixel}"]`).focus();
-      }
-    } catch (err) {
-      if (err.name == "ReferenceError") {
-        $("div[tabindex=0]").focus();
-      }
-    }
-  });
-}
 
 // ============
-function drawOnFocus(e) {
-  let columns = $("#canvas").css("grid-Template-Columns").split(" ").length;
-  window.thisPixel = e.target;
-  window.buttomPixel = parseInt(e.target.getAttribute("tabindex")) + columns;
-  window.topPixel = parseInt(e.target.getAttribute("tabindex")) - columns;
-  setColor(thisPixel);
-}
 
 function drawOnHover(e) {
   setColor(e.target);
-}
-
-function activeArrows() {
-  canvas.addEventListener("focusin", delegatedDrawWithArrows);
-  if (isArrowsActive === false) {
-    moveWhithArrows();
-    isArrowsActive = true;
-  }
 }
 
 // creat the grid
@@ -176,20 +137,65 @@ function delegatedDrawOnHover(e) {
   }
 }
 
-function delegatedDrawWithArrows(e) {
-  console.log("focus triggred");
-  if (e.target.classList.contains("pixel")) {
-    drawOnFocus(e);
+function mouseBtnEventHandler() {
+  canvas.addEventListener("mouseover", delegatedDrawOnHover);
+  if (isArrowsActive === true) {
+    document.removeEventListener("keydown", handleArrowPress);
+    isArrowsActive = false;
   }
 }
+
 function arrowsBtnEventHandler() {
   canvas.removeEventListener("mouseover", delegatedDrawOnHover);
   activeArrows();
 }
-function mouseBtnEventHandler() {
-  canvas.addEventListener("mouseover", delegatedDrawOnHover);
-  if (isArrowsActive === true) {
-    $(document).off("keydown");
-    isArrowsActive = false;
+
+function activeArrows() {
+  canvas.addEventListener("focusin", delegatedDrawWithArrows);
+  if (isArrowsActive === false) {
+    moveWhithArrows();
+    isArrowsActive = true;
+  }
+}
+
+function delegatedDrawWithArrows(e) {
+  if (e.target.classList.contains("pixel")) {
+    drawOnFocus(e);
+  }
+}
+function moveWhithArrows() {
+  document.addEventListener("keydown", handleArrowPress);
+}
+
+function drawOnFocus(e) {
+  let columns = $("#canvas").css("grid-Template-Columns").split(" ").length;
+  window.thisPixel = e.target;
+  window.buttomPixel = parseInt(e.target.getAttribute("tabindex")) + columns;
+  window.topPixel = parseInt(e.target.getAttribute("tabindex")) - columns;
+  setColor(thisPixel);
+}
+
+function handleArrowPress(e) {
+  const focusedPixel = document.activeElement;
+  if (focusedPixel && focusedPixel.classList.contains("pixel")) {
+    if (e.key === "ArrowRight" && focusedPixel.nextElementSibling) {
+      focusedPixel.nextElementSibling.focus();
+    } else if (e.key === "ArrowLeft" && focusedPixel.previousElementSibling) {
+      focusedPixel.previousElementSibling.focus();
+    }
+
+    if (e.key === "ArrowUp") {
+      const upperPixel = document.querySelector(
+        `div[tabindex="${window.topPixel}"]`,
+      );
+
+      upperPixel && upperPixel.focus();
+    } else if (e.key === "ArrowDown") {
+      const lowerPixel = document.querySelector(
+        `div[tabindex="${window.buttomPixel}"]`,
+      );
+
+      lowerPixel && lowerPixel.focus();
+    }
   }
 }
