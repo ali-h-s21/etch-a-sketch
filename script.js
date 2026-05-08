@@ -161,14 +161,13 @@ function delegatedDrawWithArrows(e) {
   if (e.target.classList.contains("pixel")) {
     fillPixelOnFocus(e);
 
+    //capture the pixel and get the grid size to calculate the above and bellow relitave pixels
     let numberOfcolumns = parseInt(
       canvas.style.gridTemplateColumns.match(/\d+/)[0],
     );
 
-    window.buttomPixel =
-      parseInt(e.target.getAttribute("tabindex")) + numberOfcolumns;
-    window.topPixel =
-      parseInt(e.target.getAttribute("tabindex")) - numberOfcolumns;
+    window.buttomPixel = parseInt(e.target.tabIndex) + numberOfcolumns;
+    window.topPixel = parseInt(e.target.tabIndex) - numberOfcolumns;
   }
 }
 
