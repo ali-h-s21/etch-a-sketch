@@ -146,35 +146,32 @@ function mouseBtnEventHandler() {
 }
 
 function arrowsBtnEventHandler() {
+  // disable mouse drawing
   canvas.removeEventListener("mouseover", delegatedDrawOnHover);
-  activeArrows();
-}
-
-function activeArrows() {
-  canvas.addEventListener("focusin", delegatedDrawWithArrows);
   if (isArrowsActive === false) {
-    moveWhithArrows();
+    // listen to key press on document
+    document.addEventListener("keydown", handleArrowPress);
+    // listen to focus on the canvas
+    canvas.addEventListener("focusin", delegatedDrawWithArrows);
     isArrowsActive = true;
   }
 }
 
 function delegatedDrawWithArrows(e) {
   if (e.target.classList.contains("pixel")) {
-    drawOnFocus(e);
+    fillPixelOnFocus(e);
   }
 }
-function moveWhithArrows() {
-  document.addEventListener("keydown", handleArrowPress);
-}
 
-function drawOnFocus(e) {
-  let columns = $("#canvas").css("grid-Template-Columns").split(" ").length;
-  window.thisPixel = e.target;
+function fillPixelOnFocus(e) {
+  setColor(e.target);
+  //the grid aka the canvas has the same number of colums and rows
+  let columns = getComputedStyle(canvas).gridTemplateColumns.split(" ").length;
   window.buttomPixel = parseInt(e.target.getAttribute("tabindex")) + columns;
   window.topPixel = parseInt(e.target.getAttribute("tabindex")) - columns;
-  setColor(thisPixel);
 }
 
+// focus on the correct pixel when arrows pressed
 function handleArrowPress(e) {
   const focusedPixel = document.activeElement;
   if (focusedPixel && focusedPixel.classList.contains("pixel")) {
