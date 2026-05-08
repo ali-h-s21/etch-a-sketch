@@ -10,8 +10,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const drawingWithMouseBtn = document.getElementById("hover");
   canvas = document.getElementById("canvas");
 
-  drawingWithArrowsBtn.addEventListener("click", arrowsBtnEventHandler);
-  drawingWithMouseBtn.addEventListener("click", mouseBtnEventHandler);
+  drawingWithArrowsBtn.addEventListener("click", activateArrowsMode);
+  drawingWithMouseBtn.addEventListener("click", activateMouseMode);
 
   canvas.addEventListener("pointerdown", pointerDownHandler);
   canvas.addEventListener("pointermove", delegatedDrawOnHover);
@@ -146,7 +146,7 @@ function delegatedDrawOnHover(e) {
   }
 }
 
-function mouseBtnEventHandler() {
+function activateMouseMode() {
   drawingMode = "mouse";
   isMouseDrawing = false;
   //disable drawing with arrows
@@ -154,7 +154,7 @@ function mouseBtnEventHandler() {
   canvas.removeEventListener("focusin", delegatedDrawWithArrows);
 }
 
-function arrowsBtnEventHandler() {
+function activateArrowsMode() {
   drawingMode = "arrows";
 
   // listen to key press on document
