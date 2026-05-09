@@ -5,10 +5,10 @@ let drawingMode = "none"; // mouse || arrows || none
 let topPixel = null;
 let buttomPixel = null;
 document.addEventListener("DOMContentLoaded", function () {
-  createGrid();
   const drawingWithArrowsBtn = document.getElementById("arrows");
   const drawingWithMouseBtn = document.getElementById("hover");
   canvas = document.getElementById("canvas");
+  createGrid();
 
   drawingWithArrowsBtn.addEventListener("click", activateArrowsMode);
   drawingWithMouseBtn.addEventListener("click", activateMouseMode);
@@ -48,19 +48,15 @@ function drawOnHover(e) {
 }
 
 // creat the grid
-function createGrid(numder = 5) {
-  const canvas = document.getElementById("canvas");
-
-  let gridSize = numder * numder;
-  let focusIndex = 0;
-  for (let i = 1; i <= gridSize; i++) {
+function createGrid(size = 5) {
+  canvas.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+  canvas.style.gridTemplateRows = `repeat(${size}, 1fr)`;
+  let gridSize = size ** 2;
+  for (let i = 0; i < gridSize; i++) {
     let pixel = document.createElement("div");
-    pixel.setAttribute("tabindex", `${focusIndex}`);
+    pixel.tabIndex = i;
     pixel.className = "pixel";
-    canvas.style.gridTemplateColumns = `repeat(${numder}, 1fr)`;
-    canvas.style.gridTemplateRows = `repeat(${numder}, 1fr)`;
-    canvas.insertAdjacentElement("beforeend", pixel);
-    focusIndex++;
+    canvas.appendChild(pixel);
   }
 }
 
