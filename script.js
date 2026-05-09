@@ -95,7 +95,7 @@ function setColor(currentPixel) {
 
 // input color
 function inputColor(currentPixel) {
-  let colorPickerVlaue = $(".color-picker").val();
+  let colorPickerVlaue = document.querySelector(".color-picker").value;
   currentPixel.style.backgroundColor = colorPickerVlaue;
 }
 
@@ -103,10 +103,7 @@ function inputColor(currentPixel) {
 function warmColor(currentPixel) {
   let randomRed = Math.floor(Math.random() * 255) + 1;
   let randomYellow = Math.floor(Math.random() * 8);
-  currentPixel.css(
-    "background-color",
-    `rgba(255,${randomRed},${randomYellow},1)`,
-  );
+  currentPixel.style.backgroundColor = ` rgba(255,${randomRed},${randomYellow},1)`;
 }
 
 // colold colors
@@ -114,32 +111,33 @@ function coldColor(currentPixel) {
   const warmColors = ["#2389da", "#1ca3ec", "#5abcd8", "#74ccf4", "#49e8ff"];
   let randomColor = Math.floor(Math.random() * 5);
   let color = warmColors[randomColor];
-  currentPixel.css("background", color);
+  currentPixel.style.backgroundColor = color;
 }
 
 // rainbow color
 function rainbowColor(currentPixel) {
   let randomColor = Math.floor(Math.random() * 255) + 1;
-  currentPixel.css("background-color", `hsl(${randomColor},100%,50%)`);
+  currentPixel.style.backgroundColor = `hsl(${randomColor},100%,50%)`;
 }
 // gray scale
 function grayScale(currentPixel) {
-  let background = currentPixel.css("background-color");
+  let background = getComputedStyle(currentPixel).backgroundColor;
+
   let opacity = background.split(" ")[3];
   let opacityNumber = parseFloat(opacity);
 
   if (opacityNumber === 0) {
-    currentPixel.css("background-color", "rgba(0,0,0,0.1)");
+    currentPixel.style.backgroundColor = "rgba(0,0,0,0.1)";
   } else if (opacityNumber >= 0.1 && opacityNumber <= 0.9) {
-    currentPixel.css("background-color", `rgba(0,0,0,${opacityNumber + 0.1})`);
-  } else {
-    // currentPixel.css("background-color", `rgba(0,0,0,${0.1})`)
+    currentPixel.style.backgroundColor = `rgba(0,0,0,${opacityNumber + 0.1})`;
   }
 }
 
 // clear
 function clear() {
-  $("#canvas div").css("background-color", "rgba(0,0,0,0)");
+  document.querySelectorAll("#canvas div").forEach((div) => {
+    div.style.backgroundColor = "rgba(0,0,0,0)";
+  });
 }
 
 function delegatedDrawOnHover(e) {
