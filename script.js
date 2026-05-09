@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const drawingWithMouseBtn = document.getElementById("hover");
   const canvasResizer = document.querySelector(".slider");
   const canvasSizeDisplay = document.querySelector(".size-value");
+  const paintControls = document.querySelectorAll(".colors-box .btn");
   canvasResizer.value = 5; // resetting the value for the slider on page load
   canvas = document.getElementById("canvas");
   createGrid();
@@ -26,14 +27,15 @@ document.addEventListener("DOMContentLoaded", function () {
   // this is in case the user releases the mouse click outside the canvas
   window.addEventListener("pointerup", pointerUpHandler);
 
-  //  listening to all colors buttons
-  $(".colors-box .btn").click(function () {
-    let id = $(this).attr("id");
-    if (id !== "clear") {
-      color = id;
-    } else {
-      clear();
-    }
+  paintControls.forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const id = e.currentTarget.id;
+      if (id === "clear") {
+        clear();
+      } else {
+        color = id;
+      }
+    });
   });
 });
 
