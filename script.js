@@ -62,8 +62,7 @@ function createGrid(size = 5) {
 
 // resize the grid
 function resizeGrid(value) {
-  let pixels = canvas.querySelectorAll("div");
-  pixels.forEach((pixel) => pixel.remove());
+  canvas.innerHTML = "";
   createGrid(value);
 }
 // ============ colors Functioons ==========
