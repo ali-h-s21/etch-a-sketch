@@ -52,12 +52,17 @@ function createGrid(size = 5) {
   canvas.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
   canvas.style.gridTemplateRows = `repeat(${size}, 1fr)`;
   let gridSize = size ** 2;
+
+  const fragment = document.createDocumentFragment();
+
   for (let i = 0; i < gridSize; i++) {
     let pixel = document.createElement("div");
     pixel.tabIndex = i;
     pixel.className = "pixel";
-    canvas.appendChild(pixel);
+    fragment.appendChild(pixel);
   }
+
+  canvas.appendChild(fragment);
 }
 
 // resize the grid
