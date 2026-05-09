@@ -7,9 +7,17 @@ let buttomPixel = null;
 document.addEventListener("DOMContentLoaded", function () {
   const drawingWithArrowsBtn = document.getElementById("arrows");
   const drawingWithMouseBtn = document.getElementById("hover");
+  const canvasResizer = document.querySelector(".slider");
+  const canvasSizeDisplay = document.querySelector(".size-value");
+  canvasResizer.value = 5; // resetting the value for the slider on page load
   canvas = document.getElementById("canvas");
   createGrid();
 
+  canvasResizer.addEventListener("input", (e) => {
+    let gridSizeInput = e.target.value;
+    canvasSizeDisplay.textContent = `${gridSizeInput} X ${gridSizeInput}`;
+    resizeGrid(gridSizeInput);
+  });
   drawingWithArrowsBtn.addEventListener("click", activateArrowsMode);
   drawingWithMouseBtn.addEventListener("click", activateMouseMode);
 
@@ -17,14 +25,6 @@ document.addEventListener("DOMContentLoaded", function () {
   canvas.addEventListener("pointermove", delegatedDrawOnHover);
   // this is in case the user releases the mouse click outside the canvas
   window.addEventListener("pointerup", pointerUpHandler);
-
-  // resizing the grid event handler
-  $(".slider").on("input", function () {
-    let value = $(".slider").val();
-    $(".size-value").text(`${value} x ${value}`);
-
-    resizeGrid(value);
-  });
 
   //  listening to all colors buttons
   $(".colors-box .btn").click(function () {
